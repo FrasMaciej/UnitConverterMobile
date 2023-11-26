@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UnitConverterFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/return_button"
+            android:layout_width="90dp"
+            android:layout_height="92dp"
+            android:drawableTop="@drawable/arrow_back"
+            android:paddingTop="25dp"
+            android:text="Button"
+            app:backgroundTint="#FFFFFF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.049"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.025" />
+
+        <TextView
+            android:id="@+id/converterLabel"
+            android:layout_width="198dp"
+            android:layout_height="37dp"
+            android:text="Unit"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/return_button"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.064" />
+
+        <ImageView
+            android:id="@+id/iconImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/time"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/converterLabel"
+            app:layout_constraintHorizontal_bias="0.839"
+            app:layout_constraintStart_toEndOf="@+id/return_button"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.06" />
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textField"
+            style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
+            android:layout_width="171dp"
+            android:layout_height="58dp"
+            android:layout_marginTop="132dp"
+
+            android:hint="unit"
+            app:boxBackgroundColor="#FFFBFE"
+            app:layout_constraintEnd_toStartOf="@+id/textInputLayout"
+            app:layout_constraintHorizontal_bias="0.738"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <AutoCompleteTextView
+                android:id="@+id/unitTypePicker"
+                android:layout_width="match_parent"
+                android:layout_height="53dp"
+                android:inputType="none" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout"
+            android:layout_width="184dp"
+            android:layout_height="63dp"
+            android:layout_marginTop="40dp"
+            android:hint="value"
+            app:boxBackgroundColor="#FFFBFE"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.938"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/converterLabel">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/value_input"
+                android:layout_width="182dp"
+                android:layout_height="54dp"
+                android:inputType="numberDecimal"
+                app:boxStrokeColor="#FFFBFE" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/resultUnitOne"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="60dp"
+            android:background="@drawable/converted_value_label"
+            android:gravity="center_vertical"
+            android:text="0.0"
+            android:textAlignment="textEnd"
+            app:layout_constraintEnd_toStartOf="@+id/unitOneLabel"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
+
+        <TextView
+            android:id="@+id/unitOneLabel"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:background="@drawable/converted_value_label"
+            android:gravity="center_vertical"
+            android:text=" seconds"
+            android:textAlignment="textStart"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/resultUnitOne"
+            app:layout_constraintTop_toTopOf="@+id/resultUnitOne" />
+
+        <TextView
+            android:id="@+id/resultUnitTwo"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:background="@drawable/converted_value_label"
+            android:gravity="center_vertical"
+            android:text="0.0"
+            android:textAlignment="textEnd"
+            app:layout_constraintEnd_toStartOf="@+id/unitTwoLabel"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/resultUnitOne" />
+
+        <TextView
+            android:id="@+id/unitTwoLabel"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:background="@drawable/converted_value_label"
+            android:gravity="center_vertical"
+            android:text=" minutes"
+            android:textAlignment="textStart"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/resultUnitTwo"
+            app:layout_constraintTop_toTopOf="@+id/resultUnitTwo" />
+
+        <TextView
+            android:id="@+id/resultUnitThree"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:background="@drawable/converted_value_label"
+            android:gravity="center_vertical"
+            android:text="0.0"
+            android:textAlignment="textEnd"
+            app:layout_constraintEnd_toStartOf="@+id/unitThreeLabel"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/resultUnitTwo" />
+
+        <TextView
+            android:id="@+id/unitThreeLabel"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:background="@drawable/converted_value_label"
+            android:gravity="center_vertical"
+            android:text=" hours"
+            android:textAlignment="textStart"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/resultUnitThree"
+            app:layout_constraintTop_toTopOf="@+id/resultUnitThree" />
+
+        <TextView
+            android:id="@+id/resultUnitFour"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:background="@drawable/converted_value_label"
+            android:gravity="center_vertical"
+            android:text="0.0"
+            android:textAlignment="textEnd"
+            app:layout_constraintEnd_toStartOf="@+id/unitFourLabel"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/resultUnitThree" />
+
+        <TextView
+            android:id="@+id/unitFourLabel"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:background="@drawable/converted_value_label"
+            android:gravity="center_vertical"
+            android:text=" weeks"
+            android:textAlignment="textStart"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/resultUnitFour"
+            app:layout_constraintTop_toTopOf="@+id/resultUnitFour" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

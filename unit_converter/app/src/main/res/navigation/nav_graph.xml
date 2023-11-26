@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/mainFragment">
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.example.unit_converter.MainFragment"
+        android:label="fragment_main"
+        tools:layout="@layout/fragment_main" >
+        <action
+            android:id="@+id/navigateToConverter"
+            app:destination="@id/unitConverterFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/unitConverterFragment"
+        android:name="com.example.unit_converter.UnitConverterFragment"
+        android:label="fragment_unit_converter"
+        tools:layout="@layout/fragment_unit_converter" >
+        <action
+            android:id="@+id/navigateToList"
+            app:destination="@id/mainFragment" />
+        <argument
+            android:name="type"
+            app:argType="string"
+            android:defaultValue="time" />
+    </fragment>
+</navigation>
