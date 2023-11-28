@@ -4,9 +4,27 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import Svg, { Path } from 'react-native-svg'; 
-import SvgUri from 'react-native-svg-uri';
+import Amperage from './assets/icons/amperage.svg';
+import Angle from './assets/icons/angle.svg';
+import Length from './assets/icons/length.svg';
+import Mass from './assets/icons/mass.svg';
+import Pressure from './assets/icons/pressure.svg';
+import Surface from './assets/icons/surface.svg';
+import Temperature from './assets/icons/temperature.svg';
+import Time from './assets/icons/time.svg';
+import Velocity from './assets/icons/velocity.svg';
 
+const iconMapping = {
+  amperage: <Amperage />,
+  angle: <Angle />,
+  length: <Length />,
+  mass: <Mass />,
+  pressure: <Pressure />,
+  surface: <Surface />,
+  temperature: <Temperature />,
+  time: <Time />,
+  velocity: <Velocity />,
+};
 
 const Stack = createStackNavigator();
 
@@ -17,9 +35,9 @@ export default function App() {
         initialRouteName="Home"
         screenOptions={{
           headerStyle: {
-            backgroundColor: '#F6EDFF', // Kolor tła nagłówka
+            backgroundColor: '#F6EDFF',
           },
-          headerTintColor: 'black', // Kolor ikon i tekstu w nagłówku
+          headerTintColor: 'black', 
           headerTitleStyle: {
             fontWeight: 'bold',
           },
@@ -28,29 +46,38 @@ export default function App() {
         <Stack.Screen
           name="Home"
           component={HomeScreen}
-          options={{ headerShown: false }} // Ukryj domyślny nagłówek
+          options={{ headerShown: false }} 
         />
         <Stack.Screen
           name="Details"
           component={DetailsScreen}
-          options={{
-            header: ({ navigation }) => <CustomHeader navigation={navigation} />,
-          }}
+          options={({ route }) => ({
+            header: ({ navigation }) => (
+              <CustomHeader
+                navigation={navigation}
+                icon={iconMapping[route.params.iconName.toLowerCase()]}
+                iconName={route.params.iconName.toLowerCase()}
+              />
+            ),
+          })}
         />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
 
-const CustomHeader = ({ navigation }) => {
+const CustomHeader = ({ navigation, icon, iconName }) => {
   return (
     <View style={styles.header}>
       <TouchableOpacity
         style={styles.backButton}
-        onPress={() => navigation.goBack()}
-      >
+        onPress={() => navigation.goBack()}>
         <FontAwesome5 name="arrow-left" size={30} color="black" />
       </TouchableOpacity>
+      <View style={styles.headerContent}>
+        {icon}
+        <Text style={styles.iconNameText}>{iconName}</Text>
+      </View>
     </View>
   );
 };
@@ -59,15 +86,15 @@ const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.gridContainer}>
-        {renderButton("time", "clock", navigation, "Time")}
-        {renderButton("mass", "weight-hanging", navigation, "Mass")}
-        {renderButton("length", "ruler", navigation, "Length")}
-        {renderButton("temperature", "thermometer-half", navigation, "Temperature")}
-        {renderButton("amperage", "bolt", navigation, "Amperage")}
-        {renderButton("velocity", "bolt", navigation, "Speed")}
-        {renderButton("surface", "square", navigation, "Surface")}
-        {renderButton("angle", "angle-right", navigation, "Angle")}
-        {renderButton("pressure", "tachometer-alt", navigation, "Pressure")}
+        {renderButton("time", "Time", navigation, "Time")}
+        {renderButton("mass", "Mass", navigation, "Mass")}
+        {renderButton("length", "Length", navigation, "Length")}
+        {renderButton("temperature", "Temperature", navigation, "Temperature")}
+        {renderButton("amperage", "Amperage", navigation, "Amperage")}
+        {renderButton("velocity", "Velocity", navigation, "Velocity")}
+        {renderButton("surface", "Surface", navigation, "Surface")}
+        {renderButton("angle", "Angle", navigation, "Angle")}
+        {renderButton("pressure", "Pressure", navigation, "Pressure")}
       </View>
     </View>
   );
@@ -76,10 +103,9 @@ const HomeScreen = ({ navigation }) => {
 const renderButton = (text, iconName, navigation, label) => (
   <TouchableOpacity
     style={styles.button}
-    onPress={() => navigation.navigate('Details', { label })}
+    onPress={() => navigation.navigate('Details', { label, iconName })}
   >
-        <SvgUri source={require(`./assets/icons/velocity.svg`)} />
-
+    {iconMapping[iconName.toLowerCase()]}
     <Text>{text}</Text>
   </TouchableOpacity>
 );
@@ -88,8 +114,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F6EDFF',
-    alignItems: 'center',
-    justifyContent: 'center',
+    marginTop: 50
   },
   gridContainer: {
     flexDirection: 'row',
@@ -107,13 +132,26 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   header: {
-    backgroundColor: '#F6EDFF', // Kolor tła nagłówka
-    height: 100,
+    backgroundColor: '#F6EDFF',
+    height: 75,
     flexDirection: 'row',
     alignItems: 'flex-end',
     paddingHorizontal: 10,
+    marginTop: 50
+
   },
   backButton: {
     marginRight: 10,
+  },
+  headerContent: {
+    flex: 1, 
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center', 
+  },
+  iconNameText: {
+    marginLeft: 8,
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });

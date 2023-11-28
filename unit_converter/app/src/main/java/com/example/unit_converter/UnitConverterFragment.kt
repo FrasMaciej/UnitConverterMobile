@@ -75,7 +75,7 @@ class UnitConverterFragment : Fragment() {
             "time" -> arrayOf("seconds", "minutes", "hours", "weeks")
             "mass" -> arrayOf("milligram", "gram", "kilogram", "tonne")
             "amperage" -> arrayOf("microampere", "milliampere", "ampere", "kiloampere")
-            "angle" -> arrayOf("turn", "radian", "degree", "gon")
+            "angle" -> arrayOf("degree", "radian", "turn", "gon")
             "temperature" -> arrayOf("Celsius", "Fahrenheit", "Kelvin", "Newton")
             "velocity" -> arrayOf("mph", "kmph", "knots", "Foots per second")
             "pressure" -> arrayOf("atmospheres", "Pascals", "bars", "torrs")
@@ -202,11 +202,11 @@ class UnitConverterFragment : Fragment() {
 
     fun convertAngle(unitType: String, value: Double): Array<String> {
         val conversionFactors = when (unitType) {
-            "turn" -> arrayOf(1.0, 2 * Math.PI, 360.0, 400.0)
-            "radian" -> arrayOf(1 / (2 * Math.PI), 1.0, 180 / Math.PI, 200 / Math.PI)
-            "degree" -> arrayOf(1 / 360.0, 1 / 180.0, 1.0, 10 / 9.0)
-            "gon" -> arrayOf(1 / 400.0, 1 / (200 / Math.PI), 9 / 10.0, 1.0)
-            else -> arrayOf(1.0, 2 * Math.PI, 360.0, 400.0)
+            "degree" -> arrayOf(1.0, Math.PI / 180.0, 0.002777777777777778, 1.1111111111111112)
+            "radian" -> arrayOf(180.0 / Math.PI, 1.0, 0.159154943, 63.66)
+            "turn" -> arrayOf(360.0, 6.28318531, 1.0, 400.0)
+            "gon" -> arrayOf(0.9, 0.0157079633, 0.0025, 1.0)
+            else -> arrayOf(1.0, Math.PI / 180.0, 0.0027, 1.11)
         }
 
         val results = Array(4) { "" }
