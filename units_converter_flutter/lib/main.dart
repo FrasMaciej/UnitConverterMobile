@@ -43,8 +43,15 @@ class _MyHomePageState extends State<MyHomePage> {
     'pressure',
   ];
 
+  String searchQuery = '';
+
   @override
   Widget build(BuildContext context) {
+    List<String> filteredCategories = categories
+        .where((category) =>
+        category.toLowerCase().contains(searchQuery.toLowerCase()))
+        .toList();
+
     return Scaffold(
       body: Center(
         child: Container(
@@ -54,6 +61,22 @@ class _MyHomePageState extends State<MyHomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 50),
+                child: SearchBar(
+                  hintText: 'Search',
+                  leading: const Icon(Icons.search),
+                  surfaceTintColor: MaterialStateProperty.all(
+                      Colors.white
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      searchQuery = value;
+                    });
+                  },
+
+                ),
+              ),
               Expanded(
                 child: GridView.builder(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -61,18 +84,20 @@ class _MyHomePageState extends State<MyHomePage> {
                     crossAxisSpacing: 8.0,
                     mainAxisSpacing: 8.0,
                   ),
-                  itemCount: categories.length,
+                  itemCount: filteredCategories.length,
                   itemBuilder: (context, index) {
-                    String iconPath = 'assets/icons/${categories[index].toLowerCase()}.svg';
+                    String iconPath =
+                        'assets/icons/${filteredCategories[index].toLowerCase()}.svg';
                     return RoundedButton(
-                      label: categories[index],
+                      label: filteredCategories[index],
                       iconPath: iconPath,
                       onPressed: () {
-                        // Dodanie nawigacji do nowego ekranu
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => Converter(resultName: categories[index]),
+                            builder: (context) => Converter(
+                              resultName: filteredCategories[index],
+                            ),
                           ),
                         );
                       },

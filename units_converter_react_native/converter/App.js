@@ -1,9 +1,9 @@
-import React from 'react';
-import DetailsScreen from './Details';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { Searchbar } from 'react-native-paper'; 
 import Amperage from './assets/icons/amperage.svg';
 import Angle from './assets/icons/angle.svg';
 import Length from './assets/icons/length.svg';
@@ -13,31 +13,33 @@ import Surface from './assets/icons/surface.svg';
 import Temperature from './assets/icons/temperature.svg';
 import Time from './assets/icons/time.svg';
 import Velocity from './assets/icons/velocity.svg';
+import DetailsScreen from './Details';
 
 const iconMapping = {
-  amperage: <Amperage />,
-  angle: <Angle />,
-  length: <Length />,
-  mass: <Mass />,
-  pressure: <Pressure />,
-  surface: <Surface />,
-  temperature: <Temperature />,
   time: <Time />,
+  mass: <Mass />,
+  length: <Length />,
+  temperature: <Temperature />,
+  amperage: <Amperage />,
   velocity: <Velocity />,
+  surface: <Surface />,
+  angle: <Angle />,
+  pressure: <Pressure />,
 };
 
 const Stack = createStackNavigator();
 
 export default function App() {
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const onChangeSearch = (query) => setSearchQuery(query);
+
   return (
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName="Home"
         screenOptions={{
-          headerStyle: {
-            backgroundColor: '#F6EDFF',
-          },
-          headerTintColor: 'black', 
+          headerTintColor: 'black',
           headerTitleStyle: {
             fontWeight: 'bold',
           },
@@ -46,7 +48,7 @@ export default function App() {
         <Stack.Screen
           name="Home"
           component={HomeScreen}
-          options={{ headerShown: false }} 
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Details"
@@ -57,6 +59,8 @@ export default function App() {
                 navigation={navigation}
                 icon={iconMapping[route.params.iconName.toLowerCase()]}
                 iconName={route.params.iconName.toLowerCase()}
+                searchQuery={searchQuery}
+                onChangeSearch={onChangeSearch}
               />
             ),
           })}
@@ -66,12 +70,13 @@ export default function App() {
   );
 }
 
-const CustomHeader = ({ navigation, icon, iconName }) => {
+const CustomHeader = ({ navigation, icon, iconName, searchQuery, onChangeSearch }) => {
   return (
     <View style={styles.header}>
       <TouchableOpacity
         style={styles.backButton}
-        onPress={() => navigation.goBack()}>
+        onPress={() => navigation.goBack()}
+      >
         <FontAwesome5 name="arrow-left" size={30} color="black" />
       </TouchableOpacity>
       <View style={styles.headerContent}>
@@ -83,18 +88,32 @@ const CustomHeader = ({ navigation, icon, iconName }) => {
 };
 
 const HomeScreen = ({ navigation }) => {
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const onChangeSearch = (query) => setSearchQuery(query);
+
+  const filteredButtons = Object.keys(iconMapping).filter((iconName) =>
+  iconName.toLowerCase().includes(searchQuery.toLowerCase())
+);
+
   return (
-    <View style={styles.container}>
-      <View style={styles.gridContainer}>
-        {renderButton("time", "Time", navigation, "Time")}
-        {renderButton("mass", "Mass", navigation, "Mass")}
-        {renderButton("length", "Length", navigation, "Length")}
-        {renderButton("temperature", "Temperature", navigation, "Temperature")}
-        {renderButton("amperage", "Amperage", navigation, "Amperage")}
-        {renderButton("velocity", "Velocity", navigation, "Velocity")}
-        {renderButton("surface", "Surface", navigation, "Surface")}
-        {renderButton("angle", "Angle", navigation, "Angle")}
-        {renderButton("pressure", "Pressure", navigation, "Pressure")}
+    <View style={styles.homeScreenContainer}>
+
+      <View style={styles.container}>
+      <Searchbar
+        placeholder="Search"
+        onChangeText={onChangeSearch}
+        value={searchQuery}
+        style={styles.searchBar}
+        elevation={5}      
+        clearIcon={false}
+        trailingIconColor={'black'}
+        mode={"bar"}/>
+        <View style={styles.gridContainer}>
+          {filteredButtons.map((iconName) =>
+            renderButton(iconName, iconName, navigation, iconName)
+          )}
+        </View>
       </View>
     </View>
   );
@@ -114,12 +133,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F6EDFF',
-    marginTop: 50
+    flexDirection: 'column', 
   },
   gridContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-around',
     marginTop: 20,
   },
   button: {
@@ -138,7 +156,6 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     paddingHorizontal: 10,
     marginTop: 50
-
   },
   backButton: {
     marginRight: 10,
@@ -148,10 +165,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center', 
+    
   },
   iconNameText: {
     marginLeft: 8,
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  searchBar: {
+    marginTop: 50,
+    marginRight: 10,
+    marginLeft: 10,
+    backgroundColor: '#FFFFFF',
+  },
+  homeScreenContainer: {
+    flex: 1,
+    backgroundColor: '#F6EDFF',
   },
 });

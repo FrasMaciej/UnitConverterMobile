@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="length" type="id"/>
+    <item name="angle" type="id"/>
+    <item name="mass" type="id"/>
+    <item name="surface" type="id"/>
+    <item name="amperage" type="id"/>
+    <item name="pressure" type="id"/>
+    <item name="time" type="id"/>
+    <item name="velocity" type="id"/>
+    <item name="temperature" type="id"/>
+</resources>

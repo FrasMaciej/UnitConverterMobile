@@ -1,9 +1,9 @@
 package com.example.unit_converter
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,33 +16,16 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
-import com.example.unit_converter.model.UnitTypeModel
 import com.google.android.material.textfield.TextInputEditText
 
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "converterType"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [UnitConverterFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class UnitConverterFragment : Fragment() {
-    // TODO: Rename and change types of parameters
     private val sharedViewModel: UnitTypeModel by activityViewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_unit_converter, container, false)
 
         val textView = view.findViewById<TextView>(R.id.converterLabel)
@@ -90,11 +73,9 @@ class UnitConverterFragment : Fragment() {
         val autoCompleteTextView = view.findViewById<AutoCompleteTextView>(R.id.unitTypePicker)
         autoCompleteTextView?.setText(type[0])
         autoCompleteTextView?.setAdapter(adapter)
-        autoCompleteTextView?.onItemClickListener = AdapterView.OnItemClickListener { parent, _, position, _ ->
+        autoCompleteTextView?.onItemClickListener = AdapterView.OnItemClickListener { _, _, _, _ ->
             makeConversion(iconType)
         }
-
-
 
         view.findViewById<TextView>(R.id.unitOneLabel).text = " ${type[0]}"
         view.findViewById<TextView>(R.id.unitTwoLabel).text = " ${type[1]}"
@@ -139,14 +120,24 @@ class UnitConverterFragment : Fragment() {
         saveConversionResults(results)
     }
 
-    fun saveConversionResults(results: Array<String>) {
+    private fun saveConversionResults(results: Array<String>) {
         view?.findViewById<TextView>(R.id.resultUnitOne)?.text = results[0]
         view?.findViewById<TextView>(R.id.resultUnitTwo)?.text = results[1]
         view?.findViewById<TextView>(R.id.resultUnitThree)?.text = results[2]
         view?.findViewById<TextView>(R.id.resultUnitFour)?.text = results[3]
     }
 
-    fun convertTime(unitType: String, value: Double): Array<String> {
+    private fun calculateResults(value: Double, conversionFactors: Array<Double>): Array<String> {
+        val results = Array(4) { "" }
+
+        for (i in results.indices) {
+            results[i] = (value * conversionFactors[i]).toString()
+        }
+
+        return results
+    }
+
+    private fun convertTime(unitType: String, value: Double): Array<String> {
         val conversionFactors = when (unitType) {
             "seconds" -> arrayOf(1.0, 1 / 60.0, 1 / 3600.0, 1 / 604800.0)
             "minutes" -> arrayOf(60.0, 1.0, 1 / 60.0, 1 / 10800.0)
@@ -154,17 +145,10 @@ class UnitConverterFragment : Fragment() {
             "weeks" -> arrayOf(604800.0, 3600.0, 60.0, 1.0)
             else -> arrayOf(1.0, 1 / 60.0, 1 / 3600.0, 1 / 604800.0)
         }
-
-        val results = Array(4) { "" }
-
-        for (i in results.indices) {
-            results[i] = (value * conversionFactors[i]).toString()
-        }
-
-        return results
+        return calculateResults(value, conversionFactors)
     }
 
-    fun convertMass(unitType: String, value: Double): Array<String> {
+    private fun convertMass(unitType: String, value: Double): Array<String> {
         val conversionFactors = when (unitType) {
             "milligram" -> arrayOf(1.0, 0.001, 1e-6, 1e-9)
             "gram" -> arrayOf(1000.0, 1.0, 0.001, 1e-6)
@@ -172,17 +156,10 @@ class UnitConverterFragment : Fragment() {
             "tonne" -> arrayOf(1e9, 1e6, 1000.0, 1.0)
             else -> arrayOf(1.0, 0.001, 1e-6, 1e-9)
         }
-
-        val results = Array(4) { "" }
-
-        for (i in results.indices) {
-            results[i] = (value * conversionFactors[i]).toString()
-        }
-
-        return results
+        return calculateResults(value, conversionFactors)
     }
 
-    fun convertAmperage(unitType: String, value: Double): Array<String> {
+    private fun convertAmperage(unitType: String, value: Double): Array<String> {
         val conversionFactors = when (unitType) {
             "microampere" -> arrayOf(1.0, 1e-3, 1e-6, 1e-9)
             "milliampere" -> arrayOf(1e3, 1.0, 1e-3, 1e-6)
@@ -190,17 +167,10 @@ class UnitConverterFragment : Fragment() {
             "kiloampere" -> arrayOf(1e9, 1e6, 1e3, 1.0)
             else -> arrayOf(1.0, 1e-3, 1e-6, 1e-9)
         }
-
-        val results = Array(4) { "" }
-
-        for (i in results.indices) {
-            results[i] = (value * conversionFactors[i]).toString()
-        }
-
-        return results
+        return calculateResults(value, conversionFactors)
     }
 
-    fun convertAngle(unitType: String, value: Double): Array<String> {
+    private fun convertAngle(unitType: String, value: Double): Array<String> {
         val conversionFactors = when (unitType) {
             "degree" -> arrayOf(1.0, Math.PI / 180.0, 0.002777777777777778, 1.1111111111111112)
             "radian" -> arrayOf(180.0 / Math.PI, 1.0, 0.159154943, 63.66)
@@ -208,19 +178,11 @@ class UnitConverterFragment : Fragment() {
             "gon" -> arrayOf(0.9, 0.0157079633, 0.0025, 1.0)
             else -> arrayOf(1.0, Math.PI / 180.0, 0.0027, 1.11)
         }
-
-        val results = Array(4) { "" }
-
-        for (i in results.indices) {
-            results[i] = (value * conversionFactors[i]).toString()
-        }
-
-        return results
+        return calculateResults(value, conversionFactors)
     }
 
-    fun convertTemperature(unitType: String, value: Double): Array<String> {
+    private fun convertTemperature(unitType: String, value: Double): Array<String> {
         val results = Array(4) { "" }
-
         when (unitType) {
             "Celsius" -> {
                 results[0] = value.toString()
@@ -257,7 +219,7 @@ class UnitConverterFragment : Fragment() {
         return results
     }
 
-    fun convertVelocity(unitType: String, value: Double): Array<String> {
+    private fun convertVelocity(unitType: String, value: Double): Array<String> {
         val conversionFactors = when (unitType) {
             "mph" -> arrayOf(1.0, 1.60934, 0.868976, 1.46667)
             "kmph" -> arrayOf(0.621371, 1.0, 0.539957, 0.911344)
@@ -265,17 +227,10 @@ class UnitConverterFragment : Fragment() {
             "Foots per second" -> arrayOf(0.681818, 1.09728, 0.592484, 1.0)
             else -> arrayOf(1.0, 1.60934, 0.868976, 1.46667)
         }
-
-        val results = Array(4) { "" }
-
-        for (i in results.indices) {
-            results[i] = (value * conversionFactors[i]).toString()
-        }
-
-        return results
+        return calculateResults(value, conversionFactors)
     }
 
-    fun convertPressure(unitType: String, value: Double): Array<String> {
+    private fun convertPressure(unitType: String, value: Double): Array<String> {
         val conversionFactors = when (unitType) {
             "atmospheres" -> arrayOf(1.0, 101325.0, 1.01325, 760.0)
             "Pascals" -> arrayOf(9.86923e-6, 1.0, 1e-5, 0.00750062)
@@ -283,17 +238,10 @@ class UnitConverterFragment : Fragment() {
             "torrs" -> arrayOf(0.00131579, 133.322, 0.00133322, 1.0)
             else -> arrayOf(1.0, 101325.0, 1.01325, 760.0)
         }
-
-        val results = Array(4) { "" }
-
-        for (i in results.indices) {
-            results[i] = (value * conversionFactors[i]).toString()
-        }
-
-        return results
+        return calculateResults(value, conversionFactors)
     }
 
-    fun convertLength(unitType: String, value: Double): Array<String> {
+    private fun convertLength(unitType: String, value: Double): Array<String> {
         val conversionFactors = when (unitType) {
             "meters" -> arrayOf(1.0, 3.28084, 1.09361, 0.000621371)
             "foots" -> arrayOf(0.3048, 1.0, 0.333333, 0.000189394)
@@ -301,17 +249,10 @@ class UnitConverterFragment : Fragment() {
             "miles" -> arrayOf(1609.34, 5280.0, 1760.0, 1.0)
             else -> arrayOf(1.0, 3.28084, 1.09361, 0.000621371)
         }
-
-        val results = Array(4) { "" }
-
-        for (i in results.indices) {
-            results[i] = (value * conversionFactors[i]).toString()
-        }
-
-        return results
+        return calculateResults(value, conversionFactors)
     }
 
-    fun convertSurface(unitType: String, value: Double): Array<String> {
+    private fun convertSurface(unitType: String, value: Double): Array<String> {
         val conversionFactors = when (unitType) {
             "square inch" -> arrayOf(1.0, 0.00064516, 0.000000159423, 1.550e-10)
             "square foot" -> arrayOf(144.0, 1.0, 0.0000229568, 0.0000000229568)
@@ -319,33 +260,7 @@ class UnitConverterFragment : Fragment() {
             "square mile" -> arrayOf(6.273e+7, 2.788e+7, 3.861e+6, 1.0)
             else -> arrayOf(1.0, 0.00064516, 0.000000159423, 1.550e-10)
         }
-
-        val results = Array(4) { "" }
-
-        for (i in results.indices) {
-            results[i] = (value * conversionFactors[i]).toString()
-        }
-
-        return results
+        return calculateResults(value, conversionFactors)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment UnitConverterFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            UnitConverterFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
 }
